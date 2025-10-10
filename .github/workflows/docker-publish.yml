@@ -2,6 +2,7 @@ name: Publish Docker Image
 
 on:
   push:
+  workflow_dispatch:
 
 jobs:
   # Test the image builds and works correctly.
