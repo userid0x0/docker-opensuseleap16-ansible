@@ -2,9 +2,9 @@ FROM docker.io/opensuse/leap:16.0
 
 ENV pip_packages="ansible"
 
-# Install systemd (based on official CentOS instructions).
+# Install systemd (instructions partly taken from CentOS)
 RUN zypper -n install systemd && zypper clean \
-    && rm -f /lib/systemd/system/multi-user.target.wants/* \
+    && find /lib/systemd/system/multi-user.target.wants ! \( -name '*getty*' -or -name '*logind*' -or -name '*systemd-user*' \) -type l \
     && rm -f /etc/systemd/system/*.wants/* \
     && rm -f /lib/systemd/system/local-fs.target.wants/* \
     && rm -f /lib/systemd/system/sockets.target.wants/*udev* \
@@ -12,7 +12,7 @@ RUN zypper -n install systemd && zypper clean \
     && rm -f /lib/systemd/system/basic.target.wants/* \
     && rm -f /lib/systemd/system/anaconda.target.wants/*
 
-# Install base requirements and Python 3.11.
+# Install base requirements and Python
 RUN zypper refresh \
     && zypper install -y \
       sudo \
@@ -24,10 +24,6 @@ RUN zypper refresh \
       python313-wheel \
       python313-PyYAML \
     && zypper clean -a
-
-# Ensure python3 points to Python 3.11.
-#RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1 \
-# && update-alternatives --install /usr/bin/pip3 pip3 /usr/bin/pip3.11 1
 
 # Upgrade pip, setuptools, and wheel.
 RUN pip3 install --no-cache-dir --upgrade pip setuptools wheel
