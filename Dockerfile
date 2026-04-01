@@ -2,8 +2,16 @@ FROM docker.io/opensuse/leap:16.0
 
 ENV pip_packages="ansible"
 
+# update to latest OpenSUSE Leap
+# at the time of writing the OpenSUSE Leap 16.0 image doesn't have a periodic update
+RUN zypper refresh \
+    && zypper update -y \
+    && zypper clean -a \
+
 # Install systemd (instructions partly taken from CentOS)
-RUN zypper -n install systemd && zypper clean \
+RUN zypper refresh \
+    && zypper -n install -y systemd \
+    && zypper clean -a \
     && find /lib/systemd/system/multi-user.target.wants ! \( -name '*getty*' -or -name '*logind*' -or -name '*systemd-user*' \) -type l \
     && rm -f /etc/systemd/system/*.wants/* \
     && rm -f /lib/systemd/system/local-fs.target.wants/* \
