@@ -56,4 +56,4 @@ jobs:
           platforms: linux/amd64
           push: true
           target: leap161
-          tags: ${{ github.repository }}:16.1 ${{ github.repository }}:latest
+          tags: ${{ github.repository }}:16.1,${{ github.repository }}:latest
